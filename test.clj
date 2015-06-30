@@ -25,15 +25,17 @@
 
 (def L 3)
 (def dict "/usr/share/dict/words")
-;; (def dict "/home/evan/desktop/wordgame/abc.txt")
 
 (defn getRandom [set]
   "gets a random element from a set"
   (rand-nth (seq set)))
 
 (defn suffix [word]
-  "(.substring word (- (.length word) L)))"
-  (.substring word L))
+  "word with first L characters cut out"
+  (.toLowerCase (.substring word L)))
+(defn prefix [word]
+  "first L characters of word"
+  (.toLowerCase (subs word 0 L)))
 
 (use 'clojure.java.io)
 (defn addDict [dictfile]
@@ -52,19 +54,15 @@
   ;; use first L characters as key
   ;; if key exists: cons element to value for that key
   ;; else insert key and the list containing element to map
-
   (defn buildMap [premap wordset]
     (let [word (first wordset)]
       (if word
         (if (> (.length word) L)
-          ;; (let [prefix (.toLowerCase (.substring word 0 L))]
-          (let [prefix (.toLowerCase (subs word 0 L))]
+          (let [prefix (prefix word)]
             (recur (assoc premap prefix (cons word (get premap prefix)))
                    (rest wordset)))
           (recur premap (rest wordset)))
         premap)))
-
-
   (buildMap (hash-map) wordset))
 
 (defn suffixmap [wordset]
@@ -84,11 +82,9 @@
 (def suffmap (suffixmap wordset))
 
 (defn str-split [str L]
-  "
-  ;; splits str into a list of (/ (.length str) L)
-  ;; substrings of length L and returns them in a list
-  ;; ex: (str-split \"foobar\" 4) => '(\"foob\" \"ar\")
-  "
+  "splits str into a list of (/ (.length str) L)
+   substrings of length L and returns them in a list
+   ex: (str-split \"foobar\" 4) => '(\"foob\" \"ar\")"
   (map (fn [idx]
          (.substring str
                      (* L idx)
@@ -99,23 +95,19 @@
 
 (def rnd (java.util.Random.))
 (defn get-word-for-prefix [prefix]
-  "
-  ;; returns a random word for the given prefix (uses premap)
-  ;; returns nil if no words for given prefix
-  "
+  "returns a random word for the given prefix (uses premap)
+   returns nil if no words for given prefix"
   (let [poss-words (get premap prefix)]
     (if poss-words
       (nth poss-words (.nextInt rnd (count poss-words)))
       nil)))
 
 (defn generateForWord [word]
-  "
-  ;; if word isn't length multiple of L return false
-  ;; split word into L length segments
-  ;; get an option for each segment
-  ;; if any segment doesn't have an option return false
-  ;; return in a list, each option
-  "
+  "if word isn't length multiple of L return false
+   split word into L length segments
+   get an option for each segment
+   if any segment doesn't have an option return false
+   return in a list, each option"
   (if (not= (mod (.length word) L) 0)
     false
     (let [seg-list (str-split word L)
@@ -125,7 +117,8 @@
         false))))
 
 (defn generatePuzzles [n]
-  "generates n puzzles by finding a random word of length L that forms a puzzle"
+  "generates n puzzles by finding a random word
+   of length L that forms a puzzle"
   (when (> n 0)
     (let [possWord (getRandom wordset)
           possPuzz (generateForWord possWord)]
@@ -150,24 +143,18 @@
        (cons head (lazy-seq (remove-first f tail)))))
 (defn permutations [s]
   "sequence of permutations of s"
-  ;; (lazy-seq
-  ;;  (if (seq (rest s))
-  ;;    (apply concat (for [x s]
-  ;;                    (map #(cons x %) (permutations (remove-first #{x} s))))) 
-  ;;    [s])))
+  (comment (lazy-seq
+             (if (seq (rest s))
+               (apply concat (for [x s]
+                               (map #(cons x %)
+                                    (permutations (remove-first #{x} s))))) 
+               [s])))
   (combo/permutations s))
 
 (defn cart-prod [ls]
   "for each sublist in the list, interleave the elements
   (combos '((a b) (1 2))) => '((a 1) (a 2) (b 1) (b 2))"
-  ;; (if (not (first ls)) '()
-  ;;   (let [first (first ls)
-  ;;         rest (rest ls)]
-  ;;     (map (fn [elem] (map (fn [ending] (cons elem ending))
-  ;;                            (recur rest)))
-  ;;          first))))
   (apply combo/cartesian-product ls))
-(cart-prod '((a b) (1 2)))
 
 (defn findSolution [wordLst]
   "takes a list of words and uses their prefixes to try
@@ -180,12 +167,9 @@
             possStrings)))
 
 (defn solvePuzzle [clueLst]
-  "
-  --solver--
-  takes list of suffixes, outputs possible solutions
-  (solvePuzzle '(\"crity\" \"minus\" \"sinet\"))
-  "
+  "--solver--
+   takes list of suffixes, outputs possible solutions
+   (solvePuzzle '(\"crity\" \"minus\" \"sinet\"))"
   (let [possibleWords (map (fn [end] (get suffmap end)) clueLst)]
     (remove (fn [ls] (empty? ls))
             (map findSolution (cart-prod possibleWords)))))
-    ;; possibleWords))
