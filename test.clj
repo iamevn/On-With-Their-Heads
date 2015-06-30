@@ -166,7 +166,7 @@
   ;;     (map (fn [elem] (map (fn [ending] (cons elem ending))
   ;;                            (recur rest)))
   ;;          first))))
-  (combo/cartesian-product ls))
+  (apply combo/cartesian-product ls))
 (cart-prod '((a b) (1 2)))
 
 (defn findSolution [wordLst]
@@ -186,4 +186,6 @@
   (solvePuzzle '(\"crity\" \"minus\" \"sinet\"))
   "
   (let [possibleWords (map (fn [end] (get suffmap end)) clueLst)]
-    (filter findSolution (cart-prod possibleWords))))
+    (remove (fn [ls] (empty? ls))
+            (map findSolution (cart-prod possibleWords)))))
+    ;; possibleWords))
