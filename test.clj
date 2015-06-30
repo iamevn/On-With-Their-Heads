@@ -20,6 +20,8 @@
 ;;   split word into L/n prefixes
 ;;   for each prefix:
 ;;     display possible words starting with that prefix
+(ns puzz
+  (:require [clojure.math.combinatorics :as combo]))
 
 (def L 3)
 (def dict "/usr/share/dict/words")
@@ -85,7 +87,7 @@
   "
   ;; splits str into a list of (/ (.length str) L)
   ;; substrings of length L and returns them in a list
-  ;; ex: (str-split "foobarbazabc123" 4) => '("foob" "arba" "zabc" "123")
+  ;; ex: (str-split \"foobar\" 4) => '(\"foob\" \"ar\")
   "
   (map (fn [idx]
          (.substring str
@@ -148,21 +150,23 @@
        (cons head (lazy-seq (remove-first f tail)))))
 (defn permutations [s]
   "sequence of permutations of s"
-  (lazy-seq
-   (if (seq (rest s))
-     (apply concat (for [x s]
-                     (map #(cons x %) (permutations (remove-first #{x} s))))) 
-     [s])))
+  ;; (lazy-seq
+  ;;  (if (seq (rest s))
+  ;;    (apply concat (for [x s]
+  ;;                    (map #(cons x %) (permutations (remove-first #{x} s))))) 
+  ;;    [s])))
+  (combo/permutations s))
 
 (defn cart-prod [ls]
   "for each sublist in the list, interleave the elements
   (combos '((a b) (1 2))) => '((a 1) (a 2) (b 1) (b 2))"
-  (if (not (first ls)) '()
-    (let [first (first ls)
-          rest (rest ls)]
-      (map (fn [elem] (map (fn [ending] (cons elem ending))
-                             (combos rest)))
-           first))))
+  ;; (if (not (first ls)) '()
+  ;;   (let [first (first ls)
+  ;;         rest (rest ls)]
+  ;;     (map (fn [elem] (map (fn [ending] (cons elem ending))
+  ;;                            (recur rest)))
+  ;;          first))))
+  (combo/cartesian-product ls))
 (cart-prod '((a b) (1 2)))
 
 (defn findSolution [wordLst]
@@ -181,6 +185,5 @@
   takes list of suffixes, outputs possible solutions
   (solvePuzzle '(\"crity\" \"minus\" \"sinet\"))
   "
-  (let [possibleWords (map (fn [end] (get suffmap end)) clueLst)
-        eachPossibility ()]
-    (filter findSolution eachPossibliity)))
+  (let [possibleWords (map (fn [end] (get suffmap end)) clueLst)]
+    (filter findSolution (cart-prod possibleWords))))
