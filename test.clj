@@ -45,7 +45,7 @@
   (with-open [rdr (reader dictfile)]
     (apply hash-set
            (remove (fn [str] (or (re-find #"[-']" str)
-                                 (.equals str (.toLowerCase str))))
+                                 (not (.equals str (.toLowerCase str)))))
                    (line-seq rdr)))))
 
 (def wordset (addDict dict))
