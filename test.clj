@@ -33,16 +33,19 @@
 (defn suffix [word]
   "word with first L characters cut out"
   (.toLowerCase (.substring word L)))
+
 (defn prefix [word]
   "first L characters of word"
   (.toLowerCase (subs word 0 L)))
 
 (use 'clojure.java.io)
+
 (defn addDict [dictfile]
   "Read words from dictionary file into wordset, returns that set"
   (with-open [rdr (reader dictfile)]
     (apply hash-set
-           (remove (fn [str] (re-find #"[-']" str))
+           (remove (fn [str] (or (re-find #"[-']" str)
+                                 (.equals str (.toLowerCase str))))
                    (line-seq rdr)))))
 
 (def wordset (addDict dict))
@@ -94,6 +97,7 @@
   )
 
 (def rnd (java.util.Random.))
+
 (defn get-word-for-prefix [prefix]
   "returns a random word for the given prefix (uses premap)
    returns nil if no words for given prefix"
@@ -136,19 +140,8 @@
   "generate single puzzle"
   (generatePuzzles 1))
 
-(defn remove-first [f [head & tail]]
-  "remove first instance of f from a sequence"
-   (if (f head)
-       tail
-       (cons head (lazy-seq (remove-first f tail)))))
 (defn permutations [s]
   "sequence of permutations of s"
-  (comment (lazy-seq
-             (if (seq (rest s))
-               (apply concat (for [x s]
-                               (map #(cons x %)
-                                    (permutations (remove-first #{x} s))))) 
-               [s])))
   (combo/permutations s))
 
 (defn cart-prod [ls]
@@ -159,7 +152,7 @@
 (defn findSolution [wordLst]
   "takes a list of words and uses their prefixes to try
   to find another word:
-  (findSolution '(alacrity terminus bassinet)) -> alabaster"
+  (findSolution '('alacrity' 'terminus' 'bassinet')) -> 'alabaster'"
   (let [prefixLst (map (fn [word] (.substring word 0 L)) wordLst)
         possStrings (map (fn [strLst] (apply str strLst))
                          (permutations prefixLst))]
