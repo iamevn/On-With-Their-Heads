@@ -86,8 +86,8 @@
 
 (defn str-split [str L]
   "splits str into a list of (/ (.length str) L)
-   substrings of length L and returns them in a list
-   ex: (str-split \"foobar\" 4) => '(\"foob\" \"ar\")"
+  substrings of length L and returns them in a list
+  ex: (str-split \"foobar\" 4) => '(\"foob\" \"ar\")"
   (map (fn [idx]
          (.substring str
                      (* L idx)
@@ -100,7 +100,7 @@
 
 (defn get-word-for-prefix [prefix]
   "returns a random word for the given prefix (uses premap)
-   returns nil if no words for given prefix"
+  returns nil if no words for given prefix"
   (let [poss-words (get premap prefix)]
     (if poss-words
       (nth poss-words (.nextInt rnd (count poss-words)))
@@ -108,10 +108,10 @@
 
 (defn generateForWord [word]
   "if word isn't length multiple of L return false
-   split word into L length segments
-   get an option for each segment
-   if any segment doesn't have an option return false
-   return in a list, each option"
+  split word into L length segments
+  get an option for each segment
+  if any segment doesn't have an option return false
+  return in a list, each option"
   (if (not= (mod (.length word) L) 0)
     false
     (let [seg-list (str-split word L)
@@ -122,23 +122,28 @@
 
 (defn generatePuzzles [n]
   "generates n puzzles by finding a random word
-   of length L that forms a puzzle"
-  (when (> n 0)
-    (let [possWord (getRandom wordset)
-          possPuzz (generateForWord possWord)]
-      (if possPuzz (do
-                     (println possWord ":"
-                              possPuzz ":" 
-                              (map
-                                (fn [word]
-                                  (.concat "-" (suffix word)))
-                                possPuzz))
-                     (recur (- n 1)))
-        (recur n)))))
+  of length L that forms a puzzle"
+  ((fn [n strs]
+     (if (<= n 0) strs
+       (do
+         (let [possWord (getRandom wordset)
+               possPuzz (generateForWord possWord)]
+           (if possPuzz 
+             (recur (- n 1) 
+                    (cons (str possWord " : "
+                               (clojure.string/join ", " possPuzz) " : " 
+                               (clojure.string/join ", "
+                                      (map (fn [word] (.concat "-" (suffix word)))
+                                           possPuzz))
+                               ;; "\n"
+                               )
+                          strs))
+             (recur n strs))))))
+   n '()))
 
 (defn genPuzz []
-  "generate single puzzle"
-  (generatePuzzles 1))
+  "generate single puzzle (and outputs just its string)"
+  (first (generatePuzzles 1)))
 
 (defn permutations [s]
   "sequence of permutations of s"
@@ -152,7 +157,7 @@
 (defn findSolution [wordLst]
   "takes a list of words and uses their prefixes to try
   to find another word:
-  (findSolution '('alacrity' 'terminus' 'bassinet')) -> 'alabaster'"
+  (findSolution '(\"alacrity\" \"terminus\" \"bassinet\")) -> '(\"alabaster\" () () ())"
   (let [prefixLst (map (fn [word] (.substring word 0 L)) wordLst)
         possStrings (map (fn [strLst] (apply str strLst))
                          (permutations prefixLst))]
@@ -161,8 +166,8 @@
 
 (defn solvePuzzle [clueLst]
   "--solver--
-   takes list of suffixes, outputs possible solutions
-   (solvePuzzle '(\"crity\" \"minus\" \"sinet\"))"
+  takes list of suffixes, outputs possible solutions
+  (solvePuzzle '(\"crity\" \"minus\" \"sinet\"))"
   (let [possibleWords (map (fn [end] (get suffmap end)) clueLst)]
     (remove (fn [ls] (empty? ls))
             (map findSolution (cart-prod possibleWords)))))
