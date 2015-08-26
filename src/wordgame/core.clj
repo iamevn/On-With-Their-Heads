@@ -20,8 +20,12 @@
 ;;   split word into L/n prefixes
 ;;   for each prefix:
 ;;     display possible words starting with that prefix
-(ns puzz
-  (:require [clojure.math.combinatorics :as combo]))
+(ns wordgame.core
+  (:require [clojure.math.combinatorics :as combo])
+  (:gen-class
+    :name wordgame.core
+    :methods [#^{:static true} [genPuzz [] String]]
+    ))
 
 (def L 3)
 (def dict "/usr/share/dict/words")
@@ -141,17 +145,19 @@
              (recur n strs))))))
    n '()))
 
-(defn genPuzz []
+(defn -genPuzz []
   "generate single puzzle (and outputs just its string)"
   (first (generatePuzzles 1)))
 
 (defn permutations [s]
   "sequence of permutations of s"
+  ;; (clojure.math.combinatorics/permutations s))
   (combo/permutations s))
 
 (defn cart-prod [ls]
   "for each sublist in the list, interleave the elements
   (combos '((a b) (1 2))) => '((a 1) (a 2) (b 1) (b 2))"
+  ;; (apply clojure.math.combinatorics/cartesian-product ls))
   (apply combo/cartesian-product ls))
 
 (defn findSolution [wordLst]
@@ -171,3 +177,4 @@
   (let [possibleWords (map (fn [end] (get suffmap end)) clueLst)]
     (remove (fn [ls] (empty? ls))
             (map findSolution (cart-prod possibleWords)))))
+
