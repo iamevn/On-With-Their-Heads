@@ -1,20 +1,27 @@
 echo "lein uberjar"
 lein uberjar
 
-echo "echo \"(compile 'wordgame.core)\" | lein repl"
+echo "# Generating class files..."
 echo "(compile 'wordgame.core)" | lein repl &> /dev/null
-# echo "generated class files"
+echo "# Generated"
 
-echo cp ./target/wordgame-0.0.1-standalone.jar ./wordgame.jar
-cp ./target/wordgame-0.0.1-standalone.jar ./wordgame.jar &> /dev/null
+echo "cd ./target/"
+cd ./target/
 
-echo "cd ./target/classes/"
-cd ./target/classes/ &> /dev/null
+# echo "mv ./wordgame-0.0.1-standalone.jar ./wordgame.jar"
+# mv ./wordgame-0.0.1-standalone.jar ./wordgame.jar
 
-# echo "adding classes to jar"
-echo "jar uf ../../wordgame.jar *"
-jar uf ../../wordgame.jar * &> /dev/null
+echo "cd ./classes/"
+cd ./classes/
+
+
+echo "jar uf ../wordgame-0.0.1-standalone.jar *"
+jar uf ../wordgame-0.0.1-standalone.jar *
+
+echo "jar uf ../wordgame-0.0.1.jar ./META-INF/ ./wordgame/"
+jar uf ../wordgame-0.0.1.jar ./META-INF/ ./wordgame/
+
 echo "done"
 echo
 
-echo "need to include wordgame.jar in java classpath"
+echo "java classpath MUST contain ./target/wordgame-0.0.1-standalone.jar"
