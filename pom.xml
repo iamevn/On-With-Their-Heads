@@ -21,11 +21,11 @@
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.4</version>
         <configuration>
-          <finalName>sparkexample</finalName>
+          <finalName>sparkproject</finalName>
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>sparkexample.Hello</mainClass>
+              <mainClass>sparkproject.Hello</mainClass>
               <classpathPrefix>dependency-jars/</classpathPrefix>
             </manifest>
           </archive>
@@ -50,13 +50,13 @@
             </goals>
             <phase>package</phase>
             <configuration>
-              <finalName>sparkexample</finalName>
+              <finalName>sparkproject</finalName>
               <descriptorRefs>
                 <descriptorRef>jar-with-dependencies</descriptorRef>
               </descriptorRefs>
               <archive>
                 <manifest>
-                  <mainClass>sparkexample.Hello</mainClass>
+                  <mainClass>sparkproject.Hello</mainClass>
                 </manifest>
               </archive>
             </configuration>
