@@ -13,6 +13,11 @@
       <artifactId>spark-core</artifactId>
       <version>2.0.0</version>
     </dependency>
+    <dependency>
+      <groupId>wordgame</groupId>
+      <artifactId>wordgame</artifactId>
+      <version>0.0.1</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -32,25 +37,6 @@
         </configuration>
       </plugin>
       <plugin>
-          <groupId>com.googlecode.addjars-maven-plugin</groupId>
-          <artifactId>addjars-maven-plugin</artifactId>
-          <version>1.0.5</version>
-          <executions>
-              <execution>
-                  <goals>
-                      <goal>add-jars</goal>
-                  </goals>
-                  <configuration>
-                      <resources>
-                          <resource>
-                              <directory>${basedir}/libs</directory>
-                          </resource>
-                      </resources>
-                  </configuration>
-              </execution>
-          </executions>
-    </plugin>  
-    <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
@@ -84,4 +70,11 @@
       </plugin>
     </plugins> 
   </build> 
+  <repositories> 
+    <repository> 
+      <id>in-project</id> 
+      <name>In Project Repo</name> 
+      <url>/home/user/app/libs/</url> 
+    </repository> 
+  </repositories>  
 </project>

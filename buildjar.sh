@@ -21,7 +21,13 @@ jar uf ../wordgame-0.0.1-standalone.jar *
 echo "jar uf ../wordgame-0.0.1.jar ./META-INF/ ./wordgame/"
 jar uf ../wordgame-0.0.1.jar ./META-INF/ ./wordgame/
 
+echo "cd ../../"
+cd ../../
+
+
+echo "cp ./target/wordgame-0.0.1-standalone.jar ./libs/com.uofantarctica.headson/wordgame-0.0.1-standalone/0.0.1/wordgame-0.0.1-standalone.jar"
+cp ./target/wordgame-0.0.1-standalone.jar ./libs/wordgame/wordgame/0.0.1/wordgame-0.0.1-standalone.jar
+
+
 echo "done"
 echo
-
-echo "java classpath MUST contain ./target/wordgame-0.0.1-standalone.jar"
