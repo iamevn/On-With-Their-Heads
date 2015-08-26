@@ -1,8 +1,10 @@
-import wordgame.*;
+/* import wordgame.core.*; */
 
 class testjava {
     public static void main(String[] args) {
-        String puzzle = core.genPuzz();
-        System.out.println(puzzle);
+        for (int i = 0; i < 20; i++) {
+            String puzzle = wordgame.core.genPuzz();
+            System.out.println(puzzle);
+        }
     }
 }

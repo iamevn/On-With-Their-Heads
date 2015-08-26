@@ -170,11 +170,17 @@
     (filter (fn [string] (get wordset string))
             possStrings)))
 
-(defn solvePuzzle [clueLst]
+(defn unwrap [ls]
+  "unrwaps the list of lists to form a list
+   (unwrap '((a) (b) (c)) => '(a b c)"
+  (reduce concat '() ls)
+  )
+(defn -solvePuzzle [clueLst]
   "--solver--
   takes list of suffixes, outputs possible solutions
   (solvePuzzle '(\"crity\" \"minus\" \"sinet\"))"
+  (unwrap
   (let [possibleWords (map (fn [end] (get suffmap end)) clueLst)]
     (remove (fn [ls] (empty? ls))
-            (map findSolution (cart-prod possibleWords)))))
+            (map findSolution (cart-prod possibleWords))))))
 
