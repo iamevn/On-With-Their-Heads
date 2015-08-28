@@ -27,15 +27,15 @@ nil
 # Spark set-up -- https://sparktutorials.github.io/2015/04/14/getting-started-with-spark-and-docker.html
 
 ## Running the application with docker:
-1. Clone the repository and then build the docker image with this command:
+- Clone the repository and then build the docker image with this command:
 ```
 docker build -t onwiththeirheads .
 ```
-2. When the image has successfully built you can get the container started with:
+- When the image has successfully built you can get the container started with:
 ```
 docker run -d -p 4567:4567 onwiththeirheads
 ```
-3. If you want to run the container to inspect it or to play around run the command:
+- If you want to run the container to inspect it or to play around run the command:
 ```
 docker run -t -i -p 4567:4567 onwiththeirheads /bin/bash
 ```
