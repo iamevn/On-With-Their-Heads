@@ -31,14 +31,12 @@ USER user
 RUN lein
 
 # Compile clojure code
-RUN ["bash", "buildjar.sh"]
+RUN ["bash", "clojurebuild.sh"]
 
 # Spark set-up
-RUN ["mvn", "dependency:resolve"]
-RUN ["mvn", "verify"]
-RUN ["mvn", "package"]
+RUN ["bash", "mavenbuild.sh"]
 
 
 # Open port and set default cmd
 EXPOSE 4567
-#CMD ["/usr/lib/jvm/java-8-openjdk-amd64/bin/java", "-jar", "target/sparkproject-jar-with-dependencies.jar"]
+CMD ["/usr/lib/jvm/java-8-openjdk-amd64/bin/java", "-jar", "target/sparkproject-jar-with-dependencies.jar"]
