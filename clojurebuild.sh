@@ -4,7 +4,8 @@ echo "lein uberjar"
 lein uberjar
 
 echo "# Generating class files..."
-echo "(compile 'wordgame.core)" | lein repl &> /dev/null
+# echo "(use 'wordgame.Puzzle) (use 'wordgame.PuzzleGen) (compile 'wordgame.Puzzle) (compile 'wordgame.PuzzleGen)" | lein repl #&> /dev/null
+echo "(compile 'wordgame.Puzzle)" | lein repl #&> /dev/null
 echo "# Generated"
 
 echo "cd ./target/"
