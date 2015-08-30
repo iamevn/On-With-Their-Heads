@@ -20,12 +20,20 @@
 ;;   split word into L/n prefixes
 ;;   for each prefix:
 ;;     display possible words starting with that prefix
-(ns wordgame.core
+(ns wordgame.Puzzle
   (:require [clojure.math.combinatorics :as combo])
+
   (:gen-class
-    :name wordgame.core
-    :methods [#^{:static true} [genPuzz [] String]]
-    ))
+    :name wordgame.Puzzle
+    :init create
+    :methods [;[getClues [] List<String>]
+              [check [String] Boolean]
+              [myToString [] String]
+              #^{:static true} [generatePuzzle [] String]
+              ]))
+
+;; CompilerException java.lang.ClassFormatError: Duplicate method name&signature in class file wordgame/Puzzle, compiling:(wordgame/Puzzle.clj:23:1) 
+
 
 (def L 3)
 (def dict "/usr/share/dict/words")
@@ -145,7 +153,7 @@
              (recur n strs))))))
    n '()))
 
-(defn -genPuzz []
+(defn genPuzz []
   "generate single puzzle (and outputs just its string)"
   (first (generatePuzzles 1)))
 
@@ -175,7 +183,7 @@
    (unwrap '((a) (b) (c)) => '(a b c)"
   (reduce concat '() ls)
   )
-(defn -solvePuzzle [clueLst]
+(defn solvePuzzle [clueLst]
   "--solver--
   takes list of suffixes, outputs possible solutions
   (solvePuzzle '(\"crity\" \"minus\" \"sinet\"))"
@@ -184,3 +192,79 @@
     (remove (fn [ls] (empty? ls))
             (map findSolution (cart-prod possibleWords))))))
 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; FOR TESTING AND WORKING WITH RESULTING PUZZLE STRING ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn getFirstWord [str]
+  "extracts the first word from the given string"
+  (subs str 0 (.indexOf str " ")))
+
+(defn rmChar [str ch]
+  "removes instances of ch from str"
+  (clojure.string/trim (.replace str ch \space)))
+
+(defn splitOnSpaces [str]
+  "splits str into a list of strings on spaces"
+  (remove (fn [s]
+            (= (.length s) 0))
+          (clojure.string/split str #" "))
+  )
+
+(defn getClueWords [puzzStr]
+  "extracts clues"
+  (splitOnSpaces (clojure.string/trim
+                   (rmChar (subs puzzStr
+                                 (+ 2
+                                   (.indexOf puzzStr ":"))
+                                 (- (.lastIndexOf puzzStr ":")
+                                    1))
+                           \,))))
+
+(defn getHints [puzzStr]
+  "extracts the hints from the given puzzle string
+   returns them as a list of strings"
+  (splitOnSpaces (clojure.string/trim
+                 (rmChar (subs puzzStr
+                                       (+ 2 (.lastIndexOf puzzStr ":")))
+                           \,))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Puzzle record for a java class ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defrecord Puzzle [solution clueWords clues])
+(defn createPuzzle [puzzstr]
+  (let [solutn (getFirstWord puzzstr)
+        clues (getClueWords puzzstr)
+        hints (getHints puzzstr)]
+    (->Puzzle solutn clues hints)))
+
+
+(defn getClues [Puzz]
+  "get clues out of a Puzzle object"
+  (:clueWords Puzz))
+
+(defn check [Puzz str]
+  "check str against Puzz's solution"
+  (.equalsIgnoreCase str (:solution Puzz)))
+
+(defn -myToString [Puzz]
+  "converts Puzz to a string representation"
+  (:solutn Puzz)
+)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Static factory constructor thingy ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn -create []
+  "constructor"
+  [[] (createPuzzle (genPuzz))])
+
+(defn -generatePuzzle []
+  "returns a puzzle string"
+  (genPuzz))
