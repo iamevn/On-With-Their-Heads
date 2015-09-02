@@ -11,17 +11,23 @@ public class PuzzleObj {
     private List<String> clues;
 
     public PuzzleObj () {
-        this.rawPuzz = Puzzle.generatePuzzle();
-        this.solution = extractSolution(rawPuzz);
-        this.clueWords = extractClueWords(rawPuzz);
-        this.clues = extractClues(rawPuzz);
+        boolean done = false;
+        while (!done) {
+            this.rawPuzz = Puzzle.generatePuzzle();
+            this.solution = extractSolution(rawPuzz);
+            if (this.solution.length() == 9) {
+                this.clueWords = extractClueWords(rawPuzz);
+                this.clues = extractClues(rawPuzz);
+                done = true;
+            }
+        }
     }
 
     public List<String> getClues() {
         return this.clues;
     }
 
-    public Boolean check(String guess) {
+    public boolean check(String guess) {
         return this.solution.equalsIgnoreCase(guess);
     }
 
