@@ -5,7 +5,6 @@ MAINTAINER gpwclark
 RUN apt-get update && apt-get install -y \
   wget \
   libssl-dev \
-  tmux \
   curl \
   ca-certificates \
   wamerican \

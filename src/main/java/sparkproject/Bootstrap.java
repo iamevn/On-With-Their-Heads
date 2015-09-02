@@ -15,7 +15,7 @@ public class Bootstrap {
         //return "Your puzzle: " + PuzzleGen.create();
         String index = "";
         try{
-          index = retrieveFile("index.html");
+          index = retrieveIndexFile();
         }catch(Exception e){
           e.printStackTrace();
         }
@@ -23,10 +23,18 @@ public class Bootstrap {
         return index;
      });
   }
+  public static String retrieveIndexFile() throws Exception{
+    StringBuffer index = new StringBuffer();
+    index = retrieveFile("head.txt", index); 
+    index = retrieveFile("onwiththeirheads.js", index);
+    index = retrieveFile("tags.txt", index);
+    index = retrieveFile("style.css", index);
+    index = retrieveFile("body.txt", index);
+    return index.toString();
+  }
 
-  private static String retrieveFile(String file) throws Exception{
+  private static StringBuffer retrieveFile(String file, StringBuffer page) throws Exception{
     InputStream in = null;
-    StringBuffer resource = new StringBuffer();
     int i;
     char c;
     file = "public/" + file;
@@ -35,7 +43,7 @@ public class Bootstrap {
 
       while((i=in.read())!=-1 ){
         c=(char)i;
-        resource.append(c);
+        page.append(c);
       }
     }catch(Exception e){
       e.printStackTrace();
@@ -46,7 +54,7 @@ public class Bootstrap {
 
     }
 
-   return resource.toString();
+   return page;
   }
 
 }
