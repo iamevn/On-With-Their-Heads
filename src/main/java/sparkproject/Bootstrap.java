@@ -23,27 +23,19 @@ public class Bootstrap {
         return index;
      });
   }
+
   public static String retrieveIndexFile() throws Exception{
     StringBuffer index = new StringBuffer();
-    index = retrieveFile("head.txt", index); 
-    index = retrieveFile("onwiththeirheads.js", index);
-    index = retrieveFile("tags.txt", index);
-    index = retrieveFile("style.css", index);
-    index = retrieveFile("body.txt", index);
-    return index.toString();
-  }
-
-  private static StringBuffer retrieveFile(String file, StringBuffer page) throws Exception{
     InputStream in = null;
     int i;
     char c;
-    file = "public/" + file;
+    String index_file = "public/index.html";
     try{
-      in = Bootstrap.class.getClassLoader().getResourceAsStream(file);
+      in = Bootstrap.class.getClassLoader().getResourceAsStream(index_file);
 
       while((i=in.read())!=-1 ){
         c=(char)i;
-        page.append(c);
+        index.append(c);
       }
     }catch(Exception e){
       e.printStackTrace();
@@ -51,10 +43,7 @@ public class Bootstrap {
     }finally{
       if(in != null)
         in.close();
-
     }
-
-   return page;
+   return index.toString();
   }
-
 }

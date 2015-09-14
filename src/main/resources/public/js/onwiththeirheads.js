@@ -2,7 +2,6 @@ $(document).ready(function(){
   $('#rw1').mirror('#ro1'); 
 }); 
 
-
 $.fn.mirror = function (selector) {
     return this.each(function () {
         var $this = $(this);
