@@ -18,4 +18,5 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <script>
+    <script src="localhost:4567/css/style.css"></script>
+    <script href="localhost:4567/js/onwiththeirheads.js" rel="stylesheet"
