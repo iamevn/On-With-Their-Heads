@@ -13,6 +13,7 @@ public class Bootstrap {
     staticFileLocation("/public"); 
     get("/", (req, res) -> {
         //return "Your puzzle: " + PuzzleGen.create();
+
         String index = "";
         try{
           index = retrieveIndexFile();

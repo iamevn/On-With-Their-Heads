@@ -3,7 +3,23 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Arrays;
 
-/* renegotiable : renegading, egotist, tiaras, bleeping : -egading, -tist, -ras, -eping */
+/* 
+ * PuzzleObj is an object representing a puzzle.
+ * It has a no-argument constructor used like so: PuzzleObj puzzle = new PuzzleObj();
+ *
+ * puzzle.getClues();
+ *   returns a list of (String) clues for the puzzle, sorted alphabetically.
+ *   -> {"egeading", "eping", "ras", "tist"}
+ * 
+ * puzzle.check(String guess);
+ *   returns true if guess is the solution to the puzzle (ignores case)
+ *   returns false otherwise
+ *
+ * puzzle.toString();
+ *   returns the raw string representation of the puzzle (not intended for use outside of a debug situation)
+ *   -> "renegotiable : renegading, egotist, tiaras, bleeping : -egading, -tist, -ras, -eping"
+ *
+ */
 public class PuzzleObj {
     private String rawPuzz;
     private String solution;
@@ -52,6 +68,9 @@ public class PuzzleObj {
     private List<String> extractClues(String rawPuzz) {
         String s = rawPuzz.substring(rawPuzz.lastIndexOf(":") + 2, rawPuzz.length()).replace(",","").replace("-","");
         List<String> lst = new LinkedList<String>(Arrays.asList(s.split(" ")));
+
+        /* TODO: play around with comperators and stuff */
+        java.util.Collections.sort(lst);
 
         return lst;
     }
