@@ -1,4 +1,6 @@
-import wordgame.*;
+package sparkproject;
+
+import wordgame.Puzzle;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Arrays;
@@ -82,4 +84,3 @@ public class PuzzleObj {
         return lst;
     }
 }
-

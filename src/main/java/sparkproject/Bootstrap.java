@@ -3,6 +3,7 @@ import wordgame.*;
 
 import static spark.Spark.get;
 import static spark.SparkBase.staticFileLocation;
+import java.io.PrintWriter;
 import java.io.InputStream;
 import java.lang.StringBuffer;
 import java.lang.Exception;
@@ -12,8 +13,6 @@ public class Bootstrap {
   public static void main(String[] args) throws Exception{
     staticFileLocation("/public"); 
     get("/", (req, res) -> {
-        //return "Your puzzle: " + PuzzleGen.create();
-
         String index = "";
         try{
           index = retrieveIndexFile();
@@ -21,7 +20,16 @@ public class Bootstrap {
           e.printStackTrace();
         }
 
+        PuzzleObj puzzle = new PuzzleObj();
+        index.replaceAll("<p class=\"hide-text clues\">", "$1\n" + puzzle.getClues() + "\n");
+        index.replaceAll("<p class=\"hide-text answers\">", "$1\n" + puzzle.toString() + "\n");
+
         return index;
+     });
+    get("/clues", (req, res) -> {
+        //return "Your puzzle: " + PuzzleGen.create();
+        PuzzleObj puzzle = new PuzzleObj();
+        return puzzle.getClues();
      });
   }
 
