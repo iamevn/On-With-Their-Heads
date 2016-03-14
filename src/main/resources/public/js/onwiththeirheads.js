@@ -1,5 +1,8 @@
 //TODO remove console.log fcns
 //TODO white font?
+/*//TODO Little trick. If you want to move multiple div at same time, simply put the var ‘swapping’ of jquery-swapsies 
+         in the function.
+         It was crutial for me. I had to swap more than 20 divs simultaneously, and only one swaps was made on click*/
 
 var numBoxes = 9;
 
@@ -53,6 +56,28 @@ $(document).ready(function(){
   });  
 
 }); 
+
+  $("#button_check").click(function() {  
+
+    var answer1 = "insertanswer";
+    var answer2 = "insertanswer";
+    var answer3 = "insertanswer";
+    var mybool = 0;
+    var answer = answer1 + answer2 + answer3;
+    var i = 1;
+    while ((i < numBoxes) && (i == 1)){
+      if((answer.charAt(i) != $("textarea")[i])){
+        i = 0;
+      }
+      i++;
+    }
+    if (i == 1){
+      alert("correct");
+    } else {
+      alert("try again");
+    }
+
+  });  
 
 function mirrorTextareas(numBoxes){
   var readonly;
