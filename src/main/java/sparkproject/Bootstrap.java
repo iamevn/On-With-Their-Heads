@@ -15,12 +15,9 @@ public class Bootstrap {
     staticFileLocation("/public"); 
     get("/", (req, res) -> {
         String index = "";
-        String jsfile = "";
         String index_file = "public/index.html";
-        String js_file = "public/js/onwiththeirheads.js";
         try{
-          index = retrieveIndexFile(index_file);
-          js_file = retrieveIndexFile(js_file);
+          index = retrieveFile(index_file);
         }catch(Exception e){
           e.printStackTrace();
         }
@@ -36,7 +33,9 @@ public class Bootstrap {
         // index.replaceAll("HAPPYNOW", "<p>" + puzzle.getClues() + "\n" + puzzle.toString()+ "</p>" + "\n");
 
         //String data = "<p>" + puzzle.getClues() + " ::::::::::::::::::: " + puzzle.toString()+ "</p>" + "\n";
-        String number;
+        String rawAnswerString = puzzle.toString();
+        String[] answerString = rawAnswerString.split(":");
+        index = index.replaceFirst("(_*)insertanswer(_*)", answerString[0]);
         for (String clue : puzzle.getClues()){
           index = index.replaceFirst("(_*)insertclue(_*)", clue);
         }
@@ -58,14 +57,13 @@ public class Bootstrap {
      });
   }
 
-  public static String retrieveIndexFile() throws Exception{
+  public static String retrieveFile(String fileName) throws Exception{
     StringBuffer index = new StringBuffer();
     InputStream in = null;
     int i;
     char c;
-    String index_file = "public/index.html";
     try{
-      in = Bootstrap.class.getClassLoader().getResourceAsStream(index_file);
+      in = Bootstrap.class.getClassLoader().getResourceAsStream(fileName);
 
       while((i=in.read())!=-1 ){
         c=(char)i;

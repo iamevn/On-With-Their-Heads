@@ -8,3 +8,10 @@ textarea{
   overflow: hidden;
 }
 
+.usertextarea {
+  font: italic bold 30px Georgia, serif;
+}
+
+.container {
+  color: black;
+}

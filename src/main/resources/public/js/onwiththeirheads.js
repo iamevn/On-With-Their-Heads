@@ -5,11 +5,13 @@
          It was crutial for me. I had to swap more than 20 divs simultaneously, and only one swaps was made on click*/
 
 var numBoxes = 9;
+var answerTextAreaOrder = [1,2,3];
 
 $(document).ready(function(){
   mirrorTextareas(numBoxes);
 
   $("#button1").click(function() {  
+    switchOrder(1);
     $("#input1").swap({  
       target: "input2", // Mandatory. The ID of the element we want to swap with  
       opacity: "0.9", // if set, give the swapping elements a translucent effect in motion  
@@ -33,6 +35,7 @@ $(document).ready(function(){
   });  
 
   $("#button2").click(function() {  
+    switchOrder(2);
     $("#input2").swap({  
       target: "input3", // Mandatory. The ID of the element we want to swap with  
       opacity: "0.9", // if set, give the swapping elements a translucent effect in motion  
@@ -55,30 +58,75 @@ $(document).ready(function(){
     });  
   });  
 
-}); 
 
-  $("#button_check").click(function() {  
+  $("#buttonCheck").click(function() {  
 
-    var answer1 = "insertanswer";
-    var answer2 = "insertanswer";
-    var answer3 = "insertanswer";
-    var mybool = 0;
-    var answer = answer1 + answer2 + answer3;
-    var i = 1;
-    while ((i < numBoxes) && (i == 1)){
-      if((answer.charAt(i) != $("textarea")[i])){
-        i = 0;
+    var answer = $('#answerParagraph').html().trim();
+    console.log(answer + " wow " + answer.length + " ok ");
+ 
+    var answerTextArea = "";
+    $("#answertextarea textarea").each(function(index) {
+      console.log(index + ": " + $(this).val() );
+      answerTextArea = answerTextArea + $(this).val();
+    });
+    console.log("given: " + answerTextArea);
+
+    var i = 0;
+    var j = determineAnswerAreaOrder(0);
+    var myBool = 1;
+    
+    while ((i < numBoxes) && (myBool == 1)){
+      if ( i == 3) {
+        j = determineAnswerAreaOrder(1);
+      }
+      if ( i ==6 ) {
+        j = determineAnswerAreaOrder(2);
+      }
+      console.log("answer: " + answer.charAt(i));
+      console.log("provided: "  + answerTextArea.charAt(j));
+      if (answer.charAt(i) != answerTextArea.charAt(j)){
+        myBool = 0;
       }
       i++;
+      j++;
     }
-    if (i == 1){
+
+    if (myBool == 1){
       alert("correct");
     } else {
       alert("try again");
     }
 
   });  
+}); 
 
+function switchOrder(buttonNumber){
+  var temp1;
+  var temp2;
+  if (buttonNumber == 1){
+    temp1 = answerTextAreaOrder[0];
+    temp2 = answerTextAreaOrder[1];
+    answerTextAreaOrder[1] = temp1;
+    answerTextAreaOrder[0] = temp2;
+  } else {
+    temp1 = answerTextAreaOrder[1];
+    temp2 = answerTextAreaOrder[2];
+    answerTextAreaOrder[2] = temp1;
+    answerTextAreaOrder[1] = temp2;
+  }
+}
+
+function determineAnswerAreaOrder(index){
+    //answerTextAreaOrder
+  var currentSegment = answerTextAreaOrder[index];
+  if (currentSegment == 1 ){
+    return 0;
+  } else if (currentSegment == 2){
+    return 3;
+  } else { // currentSegment ==3 3
+    return 6;
+  }
+}
 function mirrorTextareas(numBoxes){
   var readonly;
   var readwrite;
